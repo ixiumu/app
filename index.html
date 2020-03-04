@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MrakDown Viewer</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/github-markdown-css/4.0.0/github-markdown.min.css">
+    <style>
+        body{
+            background-color: #222;
+        }
+        .markdown-body{
+            background-color: #181818;
+            color: #dcdcdc;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #484848;
+        }
+        .markdown-body a{
+            color: #458ACF;
+        }
+        .markdown-body blockquote,.markdown-body td{
+            color: #afafaf;
+            border-color: #343434;
+        }
+        .markdown-body table td, .markdown-body table th,
+        .markdown-body h1,.markdown-body h2{
+            border-color: #343434;
+        }
+        .markdown-body table tr{
+            background-color: #1C1C1C;
+        }
+        .markdown-body table tr:nth-child(2n){
+            background-color: #141414;
+        }
+
+        .loading{
+            animation: rotate 2.0s infinite linear;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            height: 60px;
+            width: 60px;
+            margin-top: -30px;
+            margin-left: -30px;
+        }
+        .loading::before, .loading::after {
+            content: " ";
+            width: 60%;
+            height: 60%;
+            display: inline-block;
+            position: absolute;
+            top: 0;
+            background-color: #fff;
+            border-radius: 100%;
+            -webkit-animation: bounce 2.0s infinite ease-in-out;
+            animation: bounce 2.0s infinite ease-in-out;
+        }
+        .loading::after {
+            top: auto;
+            bottom: 0;
+            -webkit-animation-delay: -1.0s;
+            animation-delay: -1.0s;
+        }
+        @-webkit-keyframes bounce{0%, 100%{-webkit-transform:scale(0)}50%{-webkit-transform:scale(1)}}@keyframes bounce{0%, 100%{transform:scale(0);-webkit-transform:scale(0)}50%{transform:scale(1);-webkit-transform:scale(1)}}
+        @-webkit-keyframes rotate{100%{-webkit-transform:rotate(360deg)}}@keyframes rotate{100%{transform:rotate(360deg);-webkit-transform:rotate(360deg)}}
+    </style>
+</head>
+<body>
+    <div class="loading"></div>
+    <script src="https://cdn.bootcss.com/markdown-it/10.0.0/markdown-it.min.js"></script>
+    <script>
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+                if (this.responseText.length > 0){
+                    var md = window.markdownit();
+                    var result = md.render(this.responseText);
+
+                    var article = document.createElement('article');
+                    article.className = 'markdown-body';
+                    article.innerHTML = result;
+                    document.body.appendChild(article);
+                    document.querySelector('.loading').remove();
+                }
+            }
+        };
+        xmlhttp.open('GET', 'https://gist.githubusercontent.com/ixiumu/6125637fd044d86ed62ad6f2434d3675/raw');
+        xmlhttp.send();
+    </script>
+</body>
+</html>
